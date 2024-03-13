@@ -11,6 +11,16 @@ import java.io.IOException;
  */
 public class MainGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
+        // 创建 Map 对象，作为模板数据模型
+        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
+        mainTemplateConfig.setAuthor("syfnb");
+        mainTemplateConfig.setLoop(false);
+        mainTemplateConfig.setOutputText("输出结果");
+
+        doGenerate(mainTemplateConfig);
+    }
+
+    public static void doGenerate(Object model) throws TemplateException, IOException {
         //静态文件生成
         String projectPath = System.getProperty("user.dir");
         //输入路径
@@ -23,13 +33,6 @@ public class MainGenerator {
         //动态文件生成
         String dynamicInputPath = projectPath + File.separator + "sasa-generator-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
         String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yupi/acm/MainTemplate.java";
-
-        // 创建 Map 对象，作为模板数据模型
-        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setAuthor("syfnb");
-        mainTemplateConfig.setLoop(false);
-        mainTemplateConfig.setOutputText("输出结果");
-
-        DynamicGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, mainTemplateConfig);
+        DynamicGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
     }
 }

@@ -1,0 +1,2 @@
+#!/bin/bash
+java -jar sasa-generator-basic/target/sasa-generator-basic-1.0-SNAPSHOT-jar-with-dependencies.jar "$@"
