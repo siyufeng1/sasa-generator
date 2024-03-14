@@ -32,8 +32,6 @@ public class StaticGenerator {
      */
     public static void copyFilesByHutool(String inputPath, String outputPath) {
         FileUtil.copy(inputPath, outputPath, false);
-        int[] a = new int[6];
-
     }
 
 
