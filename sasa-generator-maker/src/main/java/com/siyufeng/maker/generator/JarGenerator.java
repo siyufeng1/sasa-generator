@@ -1,4 +1,4 @@
-package com.siyufeng.maker.generator.file;
+package com.siyufeng.maker.generator;
 
 import java.io.*;
 import java.util.Map;

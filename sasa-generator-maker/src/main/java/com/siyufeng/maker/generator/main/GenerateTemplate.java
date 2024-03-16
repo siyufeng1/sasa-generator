@@ -1,50 +1,87 @@
-package com.siyufeng.maker.generator;
+package com.siyufeng.maker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
-
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import com.siyufeng.maker.generator.JarGenerator;
+import com.siyufeng.maker.generator.ScriptGenerator;
 import com.siyufeng.maker.generator.file.DynamicFileGenerator;
-import com.siyufeng.maker.generator.file.JarGenerator;
-import com.siyufeng.maker.generator.file.ScriptGenerator;
 import com.siyufeng.maker.meta.Meta;
 import com.siyufeng.maker.meta.MetaManager;
 import freemarker.template.TemplateException;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
-
-import static cn.hutool.core.lang.Console.log;
 
 /**
  * @author 司雨枫
  */
-@Slf4j
-public class MainGenerator {
-    public static void main(String[] args) throws IOException, TemplateException, InterruptedException {
+public abstract class GenerateTemplate {
+    public void doGenerate() throws IOException, TemplateException, InterruptedException {
         Meta meta = MetaManager.getMeta();
         System.out.println(meta);
 
-        //指出输出的根路径
+        //输出的根路径
         String projectsPath = System.getProperty("user.dir");
-        String outputPath = projectsPath + File.separator + "generated";
+        String outputPath = projectsPath + File.separator + "generated" + File.separator + "acm-template-pro-generator";
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
         }
 
+        //1.复制原始文件
+        String sourceCopyDestPath = copySource(meta, outputPath);
+
+        //2.代码生成
+        generateCode(meta, outputPath);
+
+        //3.构建 jar 包
+        String jarPath = buildJar(outputPath, meta);
+
+        //4.封装脚本
+        String shellOutputFilePath = buildScript(outputPath, jarPath);
+
+        //5.生成精简版的程序（产物包）
+        buildDist(outputPath, sourceCopyDestPath, shellOutputFilePath, jarPath);
+    }
+
+    protected String buildScript(String outputPath, String jarPath) throws IOException {
+        String shellOutputFilePath = outputPath + File.separator + "generator";
+        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+        return shellOutputFilePath;
+    }
+
+    protected void buildDist(String outputPath, String sourceCopyDestPath, String shellOutputFilePath, String jarPath) {
+        String distOutputPath = outputPath + "-dist";
+        //  - 拷贝jar包
+        String targetAbsolutePath = distOutputPath + File.separator + "target";
+        FileUtil.mkdir(targetAbsolutePath);
+        String jarAbsolutePath = outputPath + File.separator + jarPath;
+        FileUtil.copy(jarAbsolutePath, targetAbsolutePath, true);
+        //  - 拷贝脚本文件
+        FileUtil.copy(shellOutputFilePath, distOutputPath, true);
+        FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
+        //  - 拷贝模板文件
+        FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
+    }
+
+    protected String  buildJar(String outputPath,Meta meta) throws InterruptedException, IOException {
+        JarGenerator.doGenerate(outputPath);
+        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
+        String jarPath = "target/" + jarName;
+        return jarPath;
+    }
+
+    protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         //读取resources目录
         ClassPathResource classPathResource = new ClassPathResource("");
         String inputResourcePath = classPathResource.getAbsolutePath();
-        log.debug("{}", inputResourcePath);
 
         //java包基础路径
         //com.siyufeng
         String outputBasePackage = meta.getBasePackage();
         //com/siyufeng
         String outputBasePackagePath = StrUtil.join("/", StrUtil.split(outputBasePackage, "."));
-        //com/siyufeng/src/main/java/com/siyufeng
+        //src/main/java/com/siyufeng
         String outputBaseJavaPackagePath = outputPath + File.separator + "src/main/java" + File.separator + outputBasePackagePath;
 
         String inputFilePath;
@@ -100,13 +137,17 @@ public class MainGenerator {
         outputFilePath = outputPath + File.separator + "pom.xml";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
-        // 构建 jar 包
-        JarGenerator.doGenerate(outputPath);
+        //生成READMD.md
+        inputFilePath = inputResourcePath + File.separator + "templates/README.md.ftl";
+        outputFilePath = outputPath + File.separator + "README.md";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+    }
 
-        // 封装脚本
-        String shellOutputFilePath = outputPath + File.separator + "generator";
-        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
-        String jarPath = "target/" + jarName;
-        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+    protected String copySource(Meta meta, String outputPath) {
+        //从原始模板文件路径复制到生成的代码包中
+        String sourceRootPath = meta.getFileConfig().getSourceRootPath();
+        String sourceCopyDestPath = outputPath + File.separator + ".source";
+        FileUtil.copy(sourceRootPath, sourceCopyDestPath, true);
+        return sourceCopyDestPath;
     }
 }

@@ -6,8 +6,9 @@
   "author": "syf",
   "createTime": "2024-03-14",
   "fileConfig": {
-    "inputRootPath": "D:/sasa-generator/sasa-generator-demo-projects/acm-template-pro",
-    "outputRootPath": "D:/sasa-generator",
+    "sourceRootPath": "D:/sasa-generator/sasa-generator-demo-projects/acm-template-pro",
+    "inputRootPath": ".source/acm-template-pro",
+    "outputRootPath": "D:/sasa-generator/sasa-generator-maker/generated",
     "type": "dir",
     "files": [
       {

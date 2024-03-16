@@ -1,4 +1,4 @@
-package com.siyufeng.maker.generator.file;
+package com.siyufeng.maker.generator;
 
 import cn.hutool.core.io.FileUtil;
 
