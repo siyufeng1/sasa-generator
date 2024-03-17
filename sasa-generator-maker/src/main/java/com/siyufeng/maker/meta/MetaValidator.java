@@ -13,6 +13,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 司雨枫
@@ -37,18 +38,29 @@ public class MetaValidator {
             return;
         }
         List<ModelConfig.ModelInfo> modelInfoList = modelConfig.getModels();
-        if (CollectionUtil.isNotEmpty(modelInfoList)) {
-            for (ModelConfig.ModelInfo modelInfo : modelInfoList) {
-                // 输出路径默认值
-                String fieldName = modelInfo.getFieldName();
-                if (StrUtil.isBlank(fieldName)) {
-                    throw new MetaException("未填写 fieldName");
-                }
+        if (!CollectionUtil.isNotEmpty(modelInfoList)) {
+            return;
+        }
+        for (ModelConfig.ModelInfo modelInfo : modelInfoList) {
+            //为group,不校验
+            if(!StrUtil.isBlank(modelInfo.getGroupKey())){
+                //生成中间参数
+                List<ModelConfig.ModelInfo> subModelInfoList = modelInfo.getModels();
+                String allArgsStr = subModelInfoList.stream()
+                        .map(subModelInfo -> String.format("\"--%s\"", subModelInfo.getFieldName()))
+                        .collect(Collectors.joining(", "));
+                modelInfo.setAllArgsStr(allArgsStr);
+                continue;
+            }
+            // 输出路径默认值
+            String fieldName = modelInfo.getFieldName();
+            if (StrUtil.isBlank(fieldName)) {
+                throw new MetaException("未填写 fieldName");
+            }
 
-                String modelInfoType = modelInfo.getType();
-                if (StrUtil.isEmpty(modelInfoType)) {
-                    modelInfo.setType(ModelTypeEnum.STRING.getValue());
-                }
+            String modelInfoType = modelInfo.getType();
+            if (StrUtil.isEmpty(modelInfoType)) {
+                modelInfo.setType(ModelTypeEnum.STRING.getValue());
             }
         }
     }
@@ -94,6 +106,10 @@ public class MetaValidator {
         for (FileConfig.FileInfo fileInfo : fileInfoList) {
             //inputPath必填
             String inputPath = fileInfo.getInputPath();
+            String type = fileInfo.getType();
+            if(FileTypeEnum.GROUP.getValue().equals(type)){
+                continue;
+            }
             if(StrUtil.isBlank(inputPath)){
                 throw new MetaException("未填写inputPath");
             }
@@ -104,7 +120,6 @@ public class MetaValidator {
                 fileInfo.setOutputPath(defaultOutputPath);
             }
             // type: 默认 inputPath 有文件后缀（如.java）为 file，否则为 dir
-            String type = fileInfo.getType();
             if (StrUtil.isBlank(type)) {
                 // 无文件后缀
                 if (StrUtil.isBlank(FileUtil.getSuffix(inputPath))) {
