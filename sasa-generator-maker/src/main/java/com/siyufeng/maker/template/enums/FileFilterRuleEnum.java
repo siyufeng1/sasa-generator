@@ -1,11 +1,13 @@
 package com.siyufeng.maker.template.enums;
 
 import cn.hutool.core.util.ObjectUtil;
+import lombok.Getter;
 
 /**
  * @author 司雨枫
  * 文件过滤规则枚举
  */
+@Getter
 public enum FileFilterRuleEnum {
 
     CONTAINS("包含","contains"),
