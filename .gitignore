@@ -1,6 +1,7 @@
 ### Custom Template
 generated
 .idea
+.temp
 sasa-generator.iml
 
 ### Maven template

@@ -1,6 +1,5 @@
 package com.siyufeng.maker.generator.file;
 
-import com.siyufeng.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;
@@ -10,15 +9,6 @@ import java.io.IOException;
  * @author 司雨枫
  */
 public class FileGenerator {
-    public static void main(String[] args) throws TemplateException, IOException {
-        // 创建 Map 对象，作为模板数据模型
-        DataModel dataModel = new DataModel();
-        dataModel.setAuthor("syfnb");
-        dataModel.setLoop(false);
-        dataModel.setOutputText("输出结果");
-
-        doGenerate(dataModel);
-    }
 
     public static void doGenerate(Object model) throws TemplateException, IOException {
         //静态文件生成
