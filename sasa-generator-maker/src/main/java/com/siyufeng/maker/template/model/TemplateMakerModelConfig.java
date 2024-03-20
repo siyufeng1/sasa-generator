@@ -19,6 +19,7 @@ public class TemplateMakerModelConfig {
     @Data
     public static class ModelInfoConfig {
 
+        // 替换成哪些文本
         private String fieldName;
 
         private String type;
@@ -29,7 +30,7 @@ public class TemplateMakerModelConfig {
 
         private String abbr;
 
-        // 用于替换哪些文本
+        //用于替换的参数名称
         private String replaceText;
     }
 
@@ -41,5 +42,9 @@ public class TemplateMakerModelConfig {
         private String groupKey;
 
         private String groupName;
+
+        private String type;
+
+        private String description;
     }
 }

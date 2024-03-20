@@ -23,8 +23,6 @@ public class MetaValidator {
     public static void validateAndFill(Meta meta){
         validAndFillMetaRoot(meta);
 
-
-        
         validAndFillFileConfig(meta);
 
         validAndFillModelConfig(meta);
@@ -86,7 +84,7 @@ public class MetaValidator {
 
         //outputRootPath = 当前目录下的generated
         String outputRootPath = fileConfig.getOutputRootPath();
-        String defaultOutputRootPath = System.getProperty("user.dir") + File.separator + "generated";
+        String defaultOutputRootPath = "generated/" + FileUtil.getLastPathEle(Paths.get(sourceRootPath)).toString();
         if(StrUtil.isBlank(outputRootPath)){
             fileConfig.setOutputRootPath(defaultOutputRootPath);
         }
@@ -98,7 +96,6 @@ public class MetaValidator {
             fileConfig.setType(defaultFileConfigType);
         }
 
-
         List<FileConfig.FileInfo> fileInfoList = fileConfig.getFiles();
         if (CollectionUtil.isEmpty(fileInfoList)) {
             return;
@@ -106,6 +103,9 @@ public class MetaValidator {
         for (FileConfig.FileInfo fileInfo : fileInfoList) {
             //inputPath必填
             String inputPath = fileInfo.getInputPath();
+            if(fileInfo.getGroupKey() != null){
+                fileInfo.setType(FileTypeEnum.GROUP.getValue());
+            }
             String type = fileInfo.getType();
             if(FileTypeEnum.GROUP.getValue().equals(type)){
                 continue;

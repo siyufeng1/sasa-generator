@@ -27,5 +27,4 @@ public class FileFilterConfig {
     private String value;
 
 
-
 }
