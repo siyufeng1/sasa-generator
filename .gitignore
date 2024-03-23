@@ -3,6 +3,7 @@ generated
 .idea
 .temp
 sasa-generator.iml
+application-local.yml
 
 ### Maven template
 target/

@@ -12,13 +12,7 @@ import java.io.IOException;
 public class MainGenerator extends GenerateTemplate{
 
     @Override
-    protected void buildDist(String outputPath, String sourceCopyDestPath, String shellOutputFilePath, String jarPath) {
-        System.out.println("不生成精简版");
-    }
-
-
-    public static void main(String[] args) throws IOException, TemplateException, InterruptedException {
-        MainGenerator mainGenerator = new MainGenerator();
-        mainGenerator.doGenerate();
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String shellOutputFilePath, String jarPath) {
+        return null;
     }
 }

@@ -3,6 +3,7 @@ package com.siyufeng.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.siyufeng.maker.generator.JarGenerator;
 import com.siyufeng.maker.generator.ScriptGenerator;
 import com.siyufeng.maker.generator.file.DynamicFileGenerator;
@@ -41,8 +42,15 @@ public abstract class GenerateTemplate {
         String shellOutputFilePath = buildScript(outputPath, jarPath);
 
         //5.生成精简版的程序（产物包）
-        buildDist(outputPath, sourceCopyDestPath, shellOutputFilePath, jarPath);
+        String s = buildDist(outputPath, sourceCopyDestPath, shellOutputFilePath, jarPath);
     }
+
+    protected String buildZip(String outputPath){
+        String zipPath = outputPath + ".zip";
+        ZipUtil.zip(outputPath,zipPath);
+        return zipPath;
+    }
+
 
     protected String buildScript(String outputPath, String jarPath) throws IOException {
         String shellOutputFilePath = outputPath + File.separator + "generator";
@@ -50,7 +58,7 @@ public abstract class GenerateTemplate {
         return shellOutputFilePath;
     }
 
-    protected void buildDist(String outputPath, String sourceCopyDestPath, String shellOutputFilePath, String jarPath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String shellOutputFilePath, String jarPath) {
         String distOutputPath = outputPath + "-dist";
         //  - 拷贝jar包
         String targetAbsolutePath = distOutputPath + File.separator + "target";
@@ -62,6 +70,7 @@ public abstract class GenerateTemplate {
         FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
         //  - 拷贝模板文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
+        return distOutputPath;
     }
 
     protected String  buildJar(String outputPath,Meta meta) throws InterruptedException, IOException {
@@ -163,6 +172,9 @@ public abstract class GenerateTemplate {
         //从原始模板文件路径复制到生成的代码包中
         String sourceRootPath = meta.getFileConfig().getSourceRootPath();
         String sourceCopyDestPath = outputPath + File.separator + ".source";
+        if(!FileUtil.exist(sourceCopyDestPath)){
+            FileUtil.mkdir(sourceCopyDestPath);
+        }
         FileUtil.copy(sourceRootPath, sourceCopyDestPath, true);
         return sourceCopyDestPath;
     }
