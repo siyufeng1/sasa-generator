@@ -8,7 +8,7 @@
   "fileConfig": {
     "sourceRootPath": "D:/sasa-generator/sasa-generator-demo-projects/acm-template-pro",
     "inputRootPath": ".source/acm-template-pro",
-    "outputRootPath": "D:/sasa-generator/sasa-generator-maker/generated/acm-template-pro-generator",
+    "outputRootPath": "generated",
     "type": "dir",
     "files": [
       {

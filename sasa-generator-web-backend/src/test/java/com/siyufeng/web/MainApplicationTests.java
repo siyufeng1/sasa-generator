@@ -1,5 +1,6 @@
 package com.siyufeng.web;
 
+import cn.hutool.core.io.FileUtil;
 import com.siyufeng.web.config.CosClientConfig;
 import com.siyufeng.web.manager.CosManager;
 import org.junit.jupiter.api.Test;
@@ -15,4 +16,12 @@ import javax.annotation.Resource;
 @SpringBootTest
 class MainApplicationTests {
 
+    @Test
+    public void test(){
+        String projectPath = System.getProperty("user.dir");
+        String tempDirPath = String.format("%s/.temp/use/%s", projectPath, 1);
+        String zipFilePath = tempDirPath + "/dist.zip";
+
+        System.out.println(zipFilePath);
+    }
 }

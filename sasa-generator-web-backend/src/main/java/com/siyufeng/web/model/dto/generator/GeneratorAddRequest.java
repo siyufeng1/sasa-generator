@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * 创建请求
  *
-
  */
 @Data
 public class GeneratorAddRequest implements Serializable {
