@@ -1,7 +1,7 @@
 package com.siyufeng.web.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.siyufeng.web.meta.Meta;
+import com.siyufeng.maker.meta.Meta;
 import com.siyufeng.web.model.entity.Generator;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;

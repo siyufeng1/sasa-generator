@@ -8,7 +8,6 @@ import java.io.IOException;
 /**
  * @author 司雨枫
  */
-@Slf4j
 public class MainGenerator extends GenerateTemplate{
 
     @Override

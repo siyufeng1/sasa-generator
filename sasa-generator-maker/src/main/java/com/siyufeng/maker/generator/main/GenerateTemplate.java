@@ -18,6 +18,7 @@ import java.io.IOException;
  * @author 司雨枫
  */
 public abstract class GenerateTemplate {
+
     public void doGenerate() throws IOException, TemplateException, InterruptedException {
         Meta meta = MetaManager.getMeta();
         System.out.println(meta);
@@ -25,6 +26,17 @@ public abstract class GenerateTemplate {
         //输出的根路径
         String projectsPath = System.getProperty("user.dir");
         String outputPath = projectsPath + File.separator + "generated" + File.separator + "acm-template-pro-generator";
+        doGenerate(meta, outputPath);
+    }
+
+
+    /**
+     * 生成
+     * @throws IOException
+     * @throws TemplateException
+     * @throws InterruptedException
+     */
+    public void doGenerate(Meta meta, String outputPath) throws IOException, TemplateException, InterruptedException {
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
         }
@@ -44,6 +56,9 @@ public abstract class GenerateTemplate {
         //5.生成精简版的程序（产物包）
         String s = buildDist(outputPath, sourceCopyDestPath, shellOutputFilePath, jarPath);
     }
+
+
+
 
     protected String buildZip(String outputPath){
         String zipPath = outputPath + ".zip";
@@ -82,8 +97,7 @@ public abstract class GenerateTemplate {
 
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         //读取resources目录
-        ClassPathResource classPathResource = new ClassPathResource("");
-        String inputResourcePath = classPathResource.getAbsolutePath();
+        String inputResourcePath = "";
 
         //java包基础路径
         //com.siyufeng
@@ -100,7 +114,6 @@ public abstract class GenerateTemplate {
         inputFilePath = inputResourcePath + File.separator + "templates/java/model/DataModel.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "/model/DataModel.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
 
         // generator.StaticFileGenerator
         inputFilePath = inputResourcePath + File.separator + "templates/java/generator/StaticFileGenerator.java.ftl";

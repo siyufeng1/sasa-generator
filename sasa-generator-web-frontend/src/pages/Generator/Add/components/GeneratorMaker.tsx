@@ -71,7 +71,7 @@ export default (props: Props) => {
     >
       <ProFormItem label="模板文件" name="zipFilePath">
         <FileUploader
-          biz="generator_make_template"
+          biz="generator_name_template"
           description="请上传压缩包，打包时不要添加最外层目录！"
         />
       </ProFormItem>
