@@ -1,10 +1,10 @@
 package com.siyufeng.web;
 
-import cn.hutool.core.io.FileUtil;
-import com.siyufeng.web.config.CosClientConfig;
-import com.siyufeng.web.manager.CosManager;
+import com.siyufeng.web.model.entity.Generator;
+import com.siyufeng.web.service.GeneratorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 
@@ -16,12 +16,15 @@ import javax.annotation.Resource;
 @SpringBootTest
 class MainApplicationTests {
 
-    @Test
-    public void test(){
-        String projectPath = System.getProperty("user.dir");
-        String tempDirPath = String.format("%s/.temp/use/%s", projectPath, 1);
-        String zipFilePath = tempDirPath + "/dist.zip";
+    @Resource
+    private GeneratorService generatorService;
 
-        System.out.println(zipFilePath);
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    public void testInsert(){
+        stringRedisTemplate.opsForValue().set("test", "1");
+        System.out.println(stringRedisTemplate.opsForValue().get("test"));
     }
 }

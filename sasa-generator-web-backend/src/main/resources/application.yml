@@ -26,12 +26,12 @@ spring:
     password: si5350248
   # Redis 配置
   # todo 需替换配置，然后取消注释
-  #  redis:
-  #    database: 1
-  #    host: localhost
-  #    port: 6379
-  #    timeout: 5000
-  #    password: 123456
+  redis:
+    database: 1
+    host: 192.168.199.140
+    port: 6379
+    timeout: 5000
+    password: si5350248
   # 文件上传
   servlet:
     multipart:
@@ -46,6 +46,11 @@ server:
     session:
       cookie:
         max-age: 2592000
+  tomcat:
+    max-connections: 100000
+    threads:
+      max: 500
+    accept-count: 1000
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
