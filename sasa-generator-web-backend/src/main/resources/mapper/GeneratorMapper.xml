@@ -32,4 +32,10 @@
         userId,createTime,updateTime,
         isDelete
     </sql>
+
+    <select id="listDeletedGenerator" resultType="com.siyufeng.web.model.entity.Generator">
+        select id,distPath
+        from sasa_generator.generator
+        where isDelete = 1;
+    </select>
 </mapper>
